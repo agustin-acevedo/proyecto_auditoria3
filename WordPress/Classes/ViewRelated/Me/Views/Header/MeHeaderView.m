@@ -69,7 +69,7 @@ const CGFloat MeHeaderViewVerticalSpacing = 10.0;
 {    
     // Since this view is only visible to the current user, we should show all ratings
     //[self.gravatarImageView downloadGravatarWithEmail:gravatarEmail rating:GravatarRatingsX];
-    [self.gravatarImageView retrieveGravatarWithEmail:gravatarEmail rating:RatingX preferredSize:CGSizeMake(MeHeaderViewGravatarSize, MeHeaderViewGravatarSize)];
+    [self.gravatarImageView retrieveGravatarWithEmail:gravatarEmail rating:GravatarRatingX preferredSize:CGSizeMake(MeHeaderViewGravatarSize, MeHeaderViewGravatarSize)];
     _gravatarEmail = gravatarEmail;
 }
 
