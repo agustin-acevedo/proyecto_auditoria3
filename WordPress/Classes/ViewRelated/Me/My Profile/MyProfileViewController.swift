@@ -1,5 +1,6 @@
 import UIKit
 import WordPressShared
+import Gravatar
 
 func MyProfileViewController(account: WPAccount) -> ImmuTableViewController? {
     guard let api = account.wordPressComRestApi else {
@@ -168,12 +169,36 @@ private class MyProfileController: SettingsController {
         gravatarUploadInProgress = true
         headerView.overrideGravatarImage(newGravatar)
 
-        let service = GravatarService()
-        service.uploadImage(newGravatar, forAccount: account) { [weak self] error in
+//        let service = GravatarService()
+//        service.uploadImage(newGravatar, forAccount: account) { [weak self] error in
+//            DispatchQueue.main.async(execute: {
+//                self?.gravatarUploadInProgress = false
+//                self?.refreshModel()
+//            })
+//        }
+
+        let service = Gravatar.GravatarService()
+        service.uploadImage(newGravatar, accountEmail: account.email, accountToken: account.authToken) { [weak self] error in
             DispatchQueue.main.async(execute: {
                 self?.gravatarUploadInProgress = false
                 self?.refreshModel()
+
+                if let error = error {
+                    print("ERROR uploading image: \(error)")
+                } else {
+                    print("Success uploading image")
+                }
             })
+        }
+
+        service.fetchProfile(email: account.email) { result in
+            switch result {
+            case .success(let profile):
+                print("Success fetching profile")
+                print(profile)
+            case .failure(let error):
+                print("ERROR fetching profile: \(error)")
+            }
         }
     }
 
