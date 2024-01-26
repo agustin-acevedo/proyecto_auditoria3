@@ -54,7 +54,7 @@ class NoteBlockUserTableViewCell: NoteBlockTableViewCell {
             return
         }
 
-        let gravatar = url.flatMap { GravatarWPiOS($0) }
+        let gravatar = url.flatMap { Gravatar($0) }
         gravatarImageView.downloadGravatar(gravatar, placeholder: .gravatarPlaceholderImage, animate: true)
 
         gravatarURL = url

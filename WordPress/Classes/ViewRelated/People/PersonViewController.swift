@@ -507,7 +507,7 @@ private extension PersonViewController {
     }
 
     func refreshGravatarImage(in imageView: UIImageView) {
-        let gravatar = person.avatarURL.flatMap { GravatarWPiOS($0) }
+        let gravatar = person.avatarURL.flatMap { Gravatar($0) }
         let placeholder = UIImage(named: "gravatar")!
         imageView.downloadGravatar(gravatar, placeholder: placeholder, animate: false)
     }

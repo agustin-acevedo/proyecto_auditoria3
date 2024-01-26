@@ -357,7 +357,7 @@ private extension CommentContentTableViewCell {
     /// If the URL does not contain any image, the default placeholder image will be displayed.
     /// - Parameter url: The URL containing the image.
     func configureImage(with url: URL?) {
-        if let someURL = url, let gravatar = GravatarWPiOS(someURL) {
+        if let someURL = url, let gravatar = Gravatar(someURL) {
             avatarImageView.downloadGravatar(gravatar, placeholder: Style.placeholderImage, animate: true)
             return
         }

@@ -67,7 +67,7 @@ class NoteBlockHeaderTableViewCell: NoteBlockTableViewCell {
             return
         }
 
-        if let gravatar = GravatarWPiOS(url) {
+        if let gravatar = Gravatar(url) {
             authorAvatarImageView.downloadGravatar(gravatar, placeholder: .gravatarPlaceholderImage, animate: true)
         } else {
             authorAvatarImageView.downloadSiteIcon(at: url.absoluteString)

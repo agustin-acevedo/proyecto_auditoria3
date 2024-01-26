@@ -43,7 +43,7 @@ class RevisionsTableViewCell: UITableViewCell {
             if let avatarURL = avatarURL,
                 let placeholder = UIImage(named: "gravatar") {
                 let url = URL(string: avatarURL)
-                avatarImageView.downloadGravatar(url.flatMap { GravatarWPiOS($0) },
+                avatarImageView.downloadGravatar(url.flatMap { Gravatar($0) },
                                                  placeholder: placeholder,
                                                  animate: false)
             }
