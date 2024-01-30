@@ -102,24 +102,7 @@ struct PHPLogsView: View {
 
     private func makeRow(for entry: AtomicErrorLogEntry) -> some View {
         NavigationLink(destination: { SiteMonitoringEntryDetailsView(entry: entry) }) {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(entry.severity ?? "")
-                        .font(.system(size: 12, design: .monospaced))
-                        .textCase(.uppercase)
-                        .padding(4)
-                        .foregroundColor(Color(uiColor: entry.severityTextColor))
-                        .background(Color(uiColor: entry.severityBackgroundColor))
-                        .cornerRadius(4)
-                    Spacer()
-                    Text((entry.timestamp?.mediumStringWithTime()) ?? "")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.secondary)
-                }
-                Text(entry.message ?? "")
-                    .font(.system(size: 15))
-                    .lineLimit(3)
-            }
+            PHPLogsEntryRowView(entry: entry)
         }
     }
 
@@ -131,6 +114,31 @@ struct PHPLogsView: View {
 
     private func reload() {
         loadLogs(searchCriteria: searchCriteria, reset: true)
+    }
+}
+
+private struct PHPLogsEntryRowView: View {
+    let entry: AtomicErrorLogEntry
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text(entry.severity ?? "")
+                    .font(.system(size: 12, design: .monospaced))
+                    .textCase(.uppercase)
+                    .padding(4)
+                    .foregroundColor(Color(uiColor: entry.severityTextColor))
+                    .background(Color(uiColor: entry.severityBackgroundColor))
+                    .cornerRadius(4)
+                Spacer()
+                Text((entry.timestamp?.mediumStringWithTime()) ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+            }
+            Text(entry.message ?? "")
+                .font(.system(size: 15))
+                .lineLimit(3)
+        }
     }
 }
 

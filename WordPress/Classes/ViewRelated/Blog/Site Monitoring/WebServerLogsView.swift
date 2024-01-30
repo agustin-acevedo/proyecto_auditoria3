@@ -113,27 +113,7 @@ struct WebServerLogsView: View {
 
     private func makeRow(for entry: AtomicWebServerLogEntry) -> some View {
         NavigationLink(destination: { SiteMonitoringEntryDetailsView(entry: entry) }) {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(entry.requestType ?? "")
-                        .font(.system(size: 12, design: .monospaced))
-                        .textCase(.uppercase)
-                        .padding(4)
-                        .foregroundColor(Color(uiColor: entry.requestTypeTextColor))
-                        .background(Color(uiColor: entry.requestTypeBackgroundColor))
-                        .cornerRadius(4)
-                    Text(entry.status.flatMap(String.init) ?? "")
-                        .font(.system(size: 12, design: .monospaced))
-                        .textCase(.uppercase)
-                    Spacer()
-                    Text((entry.date?.mediumStringWithTime()) ?? "")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.secondary)
-                }
-                Text(entry.requestUrl ?? "")
-                    .font(.system(size: 15))
-                    .lineLimit(3)
-            }
+            WebServerLogsRowView(entry: entry)
         }
     }
 
@@ -145,6 +125,34 @@ struct WebServerLogsView: View {
 
     private func reload() {
         loadLogs(searchCriteria: searchCriteria, reset: true)
+    }
+}
+
+private struct WebServerLogsRowView: View {
+    let entry: AtomicWebServerLogEntry
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text(entry.requestType ?? "")
+                    .font(.system(size: 12, design: .monospaced))
+                    .textCase(.uppercase)
+                    .padding(4)
+                    .foregroundColor(Color(uiColor: entry.requestTypeTextColor))
+                    .background(Color(uiColor: entry.requestTypeBackgroundColor))
+                    .cornerRadius(4)
+                Text(entry.status.flatMap(String.init) ?? "")
+                    .font(.system(size: 12, design: .monospaced))
+                    .textCase(.uppercase)
+                Spacer()
+                Text((entry.date?.mediumStringWithTime()) ?? "")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.secondary)
+            }
+            Text(entry.requestUrl ?? "")
+                .font(.system(size: 15))
+                .lineLimit(3)
+        }
     }
 }
 
