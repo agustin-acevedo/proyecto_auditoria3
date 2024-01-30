@@ -2,17 +2,18 @@ import SwiftUI
 
 @available(iOS 16, *)
 struct SiteMonitoringEntryDetailsView: View {
-    private let text: NSAttributedString
+    private let text: () -> NSAttributedString
 
     init(entry: AtomicErrorLogEntry) {
-        self.text = makeAttributedText(for: entry)
+        self.text = { makeAttributedText(for: entry) }
     }
 
     init(entry: AtomicWebServerLogEntry) {
-        self.text = makeAttributedText(for: entry)
+        self.text = { makeAttributedText(for: entry) }
     }
 
     var body: some View {
+        let text = text()
         TextView(text: text)
             .navigationTitle(Strings.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
