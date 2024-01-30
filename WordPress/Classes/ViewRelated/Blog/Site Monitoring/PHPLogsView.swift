@@ -8,15 +8,16 @@ struct PHPLogsView: View {
     @State private var searchCriteria = PHPLogsSearchCriteria(startDate: Date.oneWeekAgo)
 
     var body: some View {
-        VStack {
-            filterBar
-            Spacer()
+        VStack(spacing: 0) {
+            VStack(spacing: 8) {
+                filterBar
+                Divider()
+            }
             main
-            Spacer()
         }
-        .onAppear(perform: {
+        .onAppear {
             loadLogs(searchCriteria: searchCriteria)
-        })
+        }
         .onChange(of: searchCriteria) { value in
             loadLogs(searchCriteria: value, reset: true)
         }
@@ -25,12 +26,10 @@ struct PHPLogsView: View {
     @ViewBuilder
     private var main: some View {
         if viewModel.loadedLogs.isEmpty {
-            if viewModel.isLoading {
-                ProgressView()
-            } else if viewModel.error != nil {
-                NoAtomicLogsView(state: .error(reload))
-            } else {
-                NoAtomicLogsView(state: .empty)
+            VStack {
+                Spacer()
+                stateView
+                Spacer()
             }
         } else {
             List {
@@ -45,6 +44,17 @@ struct PHPLogsView: View {
                 .listSectionSeparator(.hidden, edges: .bottom)
             }
             .listStyle(.plain)
+        }
+    }
+
+    @ViewBuilder
+    private var stateView: some View {
+        if viewModel.isLoading {
+            ProgressView()
+        } else if viewModel.error != nil {
+            NoAtomicLogsView(state: .error(reload))
+        } else {
+            NoAtomicLogsView(state: .empty)
         }
     }
 
