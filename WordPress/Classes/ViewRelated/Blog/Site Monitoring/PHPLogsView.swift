@@ -140,7 +140,7 @@ private struct PHPLogsEntryRowView: View {
         VStack(alignment: .leading) {
             HStack {
                 Text(entry.severity ?? "")
-                    .font(.system(size: 12, design: .monospaced))
+                    .font(.system(.caption, design: .monospaced))
                     .textCase(.uppercase)
                     .padding(4)
                     .foregroundColor(Color(uiColor: entry.severityTextColor))
@@ -148,11 +148,11 @@ private struct PHPLogsEntryRowView: View {
                     .cornerRadius(4)
                 Spacer()
                 Text((entry.timestamp?.mediumStringWithTime()) ?? "")
-                    .font(.system(size: 13))
+                    .font(.system(.footnote))
                     .foregroundStyle(.secondary)
             }
             Text(entry.message ?? "")
-                .font(.system(size: 15))
+                .font(.system(.subheadline))
                 .lineLimit(3)
         }
     }
