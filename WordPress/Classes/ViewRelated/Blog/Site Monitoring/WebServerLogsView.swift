@@ -6,6 +6,7 @@ import UIKit
 struct WebServerLogsView: View {
     @StateObject var viewModel: WebServerLogsViewModel
     @State private var searchCriteria = WebServerLogsSearchCriteria(startDate: Date.oneWeekAgo)
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     var body: some View {
         VStack(spacing: 0) {
@@ -13,6 +14,7 @@ struct WebServerLogsView: View {
                 filterBar
                 Divider()
             }
+            .background(colorScheme == .dark ? Color(uiColor: .secondarySystemBackground) : nil)
             main
         }
         .onAppear {

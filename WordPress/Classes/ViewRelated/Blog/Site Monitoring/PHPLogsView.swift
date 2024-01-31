@@ -6,6 +6,7 @@ import UIKit
 struct PHPLogsView: View {
     @StateObject var viewModel: PHPLogsViewModel
     @State private var searchCriteria = PHPLogsSearchCriteria(startDate: Date.oneWeekAgo)
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     var body: some View {
         VStack(spacing: 0) {
@@ -13,6 +14,7 @@ struct PHPLogsView: View {
                 filterBar
                 Divider()
             }
+            .background(colorScheme == .dark ? Color(uiColor: .secondarySystemBackground) : nil)
             main
         }
         .onAppear {
