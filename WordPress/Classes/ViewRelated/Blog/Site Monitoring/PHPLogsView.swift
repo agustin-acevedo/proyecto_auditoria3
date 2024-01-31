@@ -193,9 +193,12 @@ final class PHPLogsViewModel: ObservableObject {
         error = nil
 
         do {
+            let endDate = searchCriteria.endDate ?? Date.now
+            let startDate = searchCriteria.startDate ?? (Calendar.current.date(byAdding: .weekOfYear, value: -1, to: endDate) ?? endDate)
+
             let response = try await atomicSiteService.errorLogs(
                 siteID: siteID,
-                range: (searchCriteria.startDate ?? Date.oneWeekAgo)..<(searchCriteria.endDate ?? Date.now),
+                range: startDate..<endDate,
                 severity: searchCriteria.severity,
                 scrollID: scrollId
             )

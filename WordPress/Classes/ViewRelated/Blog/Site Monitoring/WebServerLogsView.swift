@@ -207,9 +207,12 @@ final class WebServerLogsViewModel: ObservableObject {
         error = nil
 
         do {
+            let endDate = searchCriteria.endDate ?? Date.now
+            let startDate = searchCriteria.startDate ?? (Calendar.current.date(byAdding: .weekOfYear, value: -1, to: endDate) ?? endDate)
+
             let response = try await atomicSiteService.webServerLogs(
                 siteID: siteID,
-                range: (searchCriteria.startDate ?? Date.oneWeekAgo)..<(searchCriteria.endDate ?? Date.now),
+                range: startDate..<endDate,
                 httpMethod: searchCriteria.requestType,
                 statusCode: searchCriteria.status,
                 scrollID: scrollId
