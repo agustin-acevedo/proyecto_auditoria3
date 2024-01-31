@@ -101,8 +101,24 @@ struct PHPLogsView: View {
     }
 
     private func makeRow(for entry: AtomicErrorLogEntry) -> some View {
-        NavigationLink(destination: { SiteMonitoringEntryDetailsView(entry: entry) }) {
+        let attributedDescription = entry.attributedDescription
+        return NavigationLink(destination: { SiteMonitoringEntryDetailsView(text: attributedDescription) }) {
             PHPLogsEntryRowView(entry: entry)
+                .swipeActions(edge: .trailing) {
+                    ShareLink(item: attributedDescription.string) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                    .tint(Color.blue)
+                }
+                .contextMenu {
+                    ShareLink(item: attributedDescription.string) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                } preview: {
+                    Text(AttributedString(attributedDescription))
+                        .frame(width: 320)
+                        .padding()
+                }
         }
     }
 

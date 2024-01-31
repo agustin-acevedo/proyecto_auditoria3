@@ -112,8 +112,24 @@ struct WebServerLogsView: View {
     }
 
     private func makeRow(for entry: AtomicWebServerLogEntry) -> some View {
-        NavigationLink(destination: { SiteMonitoringEntryDetailsView(entry: entry) }) {
+        let attributedDescription = entry.attributedDescription
+        return NavigationLink(destination: { SiteMonitoringEntryDetailsView(text: attributedDescription) }) {
             WebServerLogsRowView(entry: entry)
+                .swipeActions(edge: .trailing) {
+                    ShareLink(item: attributedDescription.string) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                    .tint(Color.blue)
+                }
+                .contextMenu {
+                    ShareLink(item: attributedDescription.string) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                } preview: {
+                    Text(AttributedString(attributedDescription))
+                        .frame(width: 320)
+                        .padding()
+                }
         }
     }
 
