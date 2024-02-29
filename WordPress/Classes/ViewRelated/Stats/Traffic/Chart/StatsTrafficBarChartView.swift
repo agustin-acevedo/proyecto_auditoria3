@@ -17,6 +17,7 @@ final class StatsTrafficBarChartView: BarChartView {
         static let gridLineWidth            = CGFloat(0.5)
         static let labelFont                = UIFont.systemFont(ofSize: 10)
         static let tickLineHeight           = CGFloat(8)
+        static let animationDuration        = CGFloat(0.5)
     }
 
     static let emptyChartBarHeight = 0.01
@@ -88,6 +89,7 @@ private extension StatsTrafficBarChartView {
 
         configureChartForSingleDataSet(dataSet)
         data = barChartData
+        animate(yAxisDuration: Constants.animationDuration, easingOption: .easeInOutSine)
         configureYAxisMaximum()
     }
 
