@@ -77,6 +77,10 @@ import Combine
         }
     }
 
+    @Published var displayTooltip = false
+    var tooltipChipPoint: CGPoint?
+    var menuScrollCompletion: ((CGPoint) -> Void)?
+
     /// The active stream filter for the stream.
     ///
     /// The `FilterProvider`'s ID is stored to identify where the `ReaderAbstractTopic` is coming from.

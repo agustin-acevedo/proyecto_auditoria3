@@ -6,15 +6,20 @@ class ReaderTabView: UIView {
     private var mainStackViewTopAnchor: NSLayoutConstraint?
     private let containerView: UIView
     private let buttonContainer: UIView
+    private lazy var readerNavigationMenu: ReaderNavigationMenu = {
+        return ReaderNavigationMenu(viewModel: viewModel)
+    }()
     private lazy var navigationMenu: UIView = {
         if !viewModel.itemsLoaded {
             viewModel.fetchReaderMenu()
         }
-        let view = UIView.embedSwiftUIView(ReaderNavigationMenu(viewModel: viewModel))
+        let view = UIView.embedSwiftUIView(readerNavigationMenu)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     private var isMenuHidden = false
+
+    private var tooltipPresenter: TooltipPresenter?
 
     private let viewModel: ReaderTabViewModel
 
@@ -23,6 +28,10 @@ class ReaderTabView: UIView {
 
     private var discoverIndex: Int? {
         return viewModel.tabItems.firstIndex(where: { $0.content.topicType == .discover })
+    }
+
+    private var subscriptionsIndex: Int? {
+        return viewModel.tabItems.firstIndex(where: { $0.content.topicType == .following })
     }
 
     private var p2Index: Int? {
@@ -50,6 +59,30 @@ class ReaderTabView: UIView {
                 viewModel.setFilterContent(topic: existingFilter.topic)
             } else {
                 addContentToContainerView(index: index)
+            }
+
+            if index == subscriptionsIndex {
+                viewModel.menuScrollCompletion = { [weak self] point in
+                    guard let self else { return }
+                    let tooltip = Tooltip()
+                    let target: () -> CGPoint = { point }
+
+                    tooltip.title = "Test"
+                    tooltip.message = "Message"
+                    tooltip.primaryButtonTitle = "Got it"
+
+                    tooltipPresenter = TooltipPresenter(
+                        containerView: self,
+                        tooltip: tooltip,
+                        target: .point(target),
+                        shouldShowSpotlightView: false
+                    )
+                    tooltipPresenter?.showTooltip()
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    viewModel.displayTooltip = true
+                })
             }
             previouslySelectedIndex = index
         }

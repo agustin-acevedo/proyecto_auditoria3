@@ -26,16 +26,31 @@ struct ReaderNavigationMenu: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ReaderNavigationButton(viewModel: viewModel)
-                        .frame(maxHeight: .infinity)
-                        .animation(.easeInOut, value: viewModel.selectedItem)
-                    streamFilterView
-                    // add some empty space so that the last filter chip doesn't get covered by the gradient mask.
-                    Spacer(minLength: Metrics.gradientMaskWidth)
+            ScrollViewReader { scrollProxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ReaderNavigationButton(viewModel: viewModel)
+                            .frame(maxHeight: .infinity)
+                            .animation(.easeInOut, value: viewModel.selectedItem)
+                        streamFilterView
+                        // add some empty space so that the last filter chip doesn't get covered by the gradient mask.
+                        Spacer(minLength: Metrics.gradientMaskWidth)
+                            .id("end")
+                    }
                 }
                 .fixedSize(horizontal: false, vertical: true)
+                .onChange(of: viewModel.displayTooltip, perform: { value in
+                    guard value else { return }
+                    print("CM: Scrolling")
+                    scrollProxy.scrollTo("end")
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        print("CM: Displaying")
+                        if let tooltipChipPoint = viewModel.tooltipChipPoint {
+                            viewModel.menuScrollCompletion?(tooltipChipPoint)
+                        }
+                    }
+                })
             }
             .animation(.easeInOut, value: filters)
             .mask({
@@ -58,6 +73,14 @@ struct ReaderNavigationMenu: View {
             }
             .accessibilityLabel(Text(Strings.searchFilterAccessibilityLabel))
         }
+    }
+
+    func updateFrame(id: String, local: CGRect, global: CGRect) -> some View {
+        guard id == "tags" else { return Color.clear }
+        viewModel.tooltipChipPoint = CGPoint(x: global.midX + 12.0, y: local.maxY + 12.0)
+        print("CM: (L) id: \(id) mid x: \(local.midX) max y: \(local.maxY) width: \(local.width) height: \(local.height)")
+        print("CM: (G) id: \(id) mid x: \(global.midX) max y: \(global.maxY) width: \(global.width) height: \(global.height)")
+        return Color.clear
     }
 
     @ViewBuilder
@@ -104,6 +127,13 @@ struct ReaderNavigationMenu: View {
         .frame(maxHeight: .infinity)
         .background(isSelected ? Colors.StreamFilter.selectedBackground : Colors.StreamFilter.background)
         .clipShape(Capsule())
+        .background {
+            GeometryReader { proxy in
+                let local = proxy.frame(in: .local)
+                let global = proxy.frame(in: .global)
+                updateFrame(id: filter.reuseIdentifier, local: local, global: global)
+            }
+        }
     }
 
     private func filterAccessibilityLabel(for filter: FilterProvider) -> String {
