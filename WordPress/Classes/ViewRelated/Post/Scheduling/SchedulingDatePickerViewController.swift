@@ -5,6 +5,7 @@ import SwiftUI
 
 struct SchedulingDatePickerConfiguration {
     var date: Date?
+    var isRequired: Bool
     var timeZone: TimeZone
     var updated: (Date?) -> Void
 }
@@ -22,6 +23,7 @@ final class SchedulingDatePickerViewController: UIHostingController<SchedulingDa
         super.viewDidLoad()
 
         title = Strings.title
+    }
 }
 
 struct SchedulingDatePickerView: View {
@@ -36,7 +38,7 @@ struct SchedulingDatePickerView: View {
                 Text(configuration.date.map(dateFormatter.string) ?? Strings.immediatelly)
                     .foregroundStyle(.secondary)
 
-                if configuration.date != nil {
+                if configuration.date != nil && !configuration.isRequired {
                     Button(action: {
                         configuration.date = nil
                         configuration.updated(nil)
@@ -74,6 +76,7 @@ extension SchedulingDatePickerViewController {
     static func make(viewModel: PublishSettingsViewModel, onDateUpdated: @escaping (Date?) -> Void) -> SchedulingDatePickerViewController {
         SchedulingDatePickerViewController(configuration: .init(
             date: viewModel.date,
+            isRequired: viewModel.isRequired,
             timeZone: viewModel.timeZone,
             updated: onDateUpdated
         ))

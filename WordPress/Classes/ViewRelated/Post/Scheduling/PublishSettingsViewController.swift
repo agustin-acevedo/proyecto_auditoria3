@@ -36,6 +36,7 @@ struct PublishSettingsViewModel {
 
     private let post: AbstractPost
 
+    var isRequired: Bool { (post.original ?? post).status == .publish }
     let dateFormatter: DateFormatter
     let dateTimeFormatter: DateFormatter
 
