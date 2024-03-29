@@ -102,7 +102,7 @@ final class PrepublishingViewController: UIViewController, UITableViewDataSource
         } else {
             if let sheetController = navigationController.sheetPresentationController {
                 if #available(iOS 16, *) {
-                    sheetController.detents = [.custom { _ in 510 }, .large()]
+                    sheetController.detents = [.custom { _ in 520 }, .large()]
                 } else {
                     sheetController.detents = [.medium(), .large()]
                 }
